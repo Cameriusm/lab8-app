@@ -3,7 +3,7 @@ import { Navbar, Nav} from "react-bootstrap";
 
 const NavBar = () => {
     return (
-        <Navbar bg="primary" variant="dark">
+        <Navbar bg="success" variant="dark">
             <Navbar.Brand href="/">Todo app</Navbar.Brand>
             <Nav className="ml-auto">
                 <Nav.Link href="/about">О приложении</Nav.Link>

@@ -3,16 +3,19 @@ const router = express.Router();
 const { check, validationResult } = require('express-validator');
 const connectDB = require('../config/db');
 
-router.delete(
-    "/",
-    [ check("id_todo", "Вы не выбрали задачу!")],
-    async (req,res) => {
-        const errors = validationResult(req);
-        if (!errors.isEmpty()) {
-            return res.status(400).json({ errors: errors.array()});
-        }
-        const { id_todo } = req.body;
-        let sql = `DELETE FROM Todos WHERE id_todo =${id_todo}`;
+router.get("/get-todo/:id", async (req, res) => {
+    let sql = `SELECT * FROM Todos WHERE id_todo=${req.params.id} LIMIT 1`;
+    await connectDB.query(sql, (err, result) => {
+        if (err) {
+            res.status(500).send("Ошибка сервера");
+            throw err;
+        } else res.json(result[0]);
+    })
+})
+
+router.delete("/:id", async (req,res) => {
+        let id = req.params.id;
+        let sql = `DELETE FROM Todos WHERE id_todo =${id}`;
         await connectDB.query(sql, (err) => {
             if (err) {
                 res.status(500).send("Ошибка сервера");
@@ -21,6 +24,25 @@ router.delete(
         })
     }
 )
+
+// router.delete(
+//     "/",
+//     [ check("id_todo", "Вы не выбрали задачу!")],
+//     async (req,res) => {
+//         const errors = validationResult(req);
+//         if (!errors.isEmpty()) {
+//             return res.status(400).json({ errors: errors.array()});
+//         }
+//         const { id_todo } = req.body;
+//         let sql = `DELETE FROM Todos WHERE id_todo =${id_todo}`;
+//         await connectDB.query(sql, (err) => {
+//             if (err) {
+//                 res.status(500).send("Ошибка сервера");
+//                 throw err;
+//             } else res.send("Запись удалена");
+//         })
+//     }
+// )
 
 
 router.put(
